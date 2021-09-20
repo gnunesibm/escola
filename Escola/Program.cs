@@ -1,28 +1,17 @@
 ﻿using Escola.Models;
 using Escola.Services;
 using System;
-
 namespace Escola
 {
     class Program
     {
-
-
         static void Main(string[] args)
         {
             PessoaService ps = new PessoaService();
             string opcao;
             do
             {
-                Console.Clear();
-                Console.WriteLine("----------- MENU -------------");
-                Console.WriteLine("| 1 - Cadastro de Pessoas    |");
-                Console.WriteLine("| 2 - Cadastro de Alunos     |");
-                Console.WriteLine("| 3 - Cadastro de Professores|");
-                Console.WriteLine("| 4 - Cadastro de Matérias   |");
-                Console.WriteLine("| 5 - Sair                   |");
-                Console.WriteLine("----------------------------");
-                Console.Write("Digite a opção: ");
+                imprimeMenuPrincipal();
                 opcao = Console.ReadLine();
                 switch (opcao)
                 {
@@ -30,15 +19,7 @@ namespace Escola
                         string opcao2;
                         do
                         {
-                            Console.Clear();
-                            Console.WriteLine("------ Cadastro de Pessoas -----");
-                            Console.WriteLine("| 1 - Listar                   |");
-                            Console.WriteLine("| 2 - Inserir                  |");
-                            Console.WriteLine("| 3 - Alterar                  |");
-                            Console.WriteLine("| 4 - Excluir                  |");
-                            Console.WriteLine("| 5 - Voltar                   |");
-                            Console.WriteLine("--------------------------------");
-                            Console.Write("Digite a opção: ");
+                            imprimeSubMenu("Pessoa");
                             opcao2 = Console.ReadLine();
                             using (escolaEntities db = new escolaEntities())
                             {
@@ -50,7 +31,7 @@ namespace Escola
                                         break;
                                     case "2": //INSERIR
                                         Console.Clear();
-                                        Console.Write("Digite o nome: [0 - Cancela]: ");
+                                        Console.Write("Digite o NOME: [0 - Cancela]: ");
                                         string nome = Console.ReadLine();
                                         if (nome == "0" || nome =="")
                                             break;
@@ -112,6 +93,33 @@ namespace Escola
                         break;
                 }
             } while (opcao != "5");
+
+            void imprimeMenuPrincipal()
+            {
+                Console.Clear();
+                Console.WriteLine("----------- MENU -------------");
+                Console.WriteLine("| 1 - Cadastro de Pessoas    |");
+                Console.WriteLine("| 2 - Cadastro de Alunos     |");
+                Console.WriteLine("| 3 - Cadastro de Professores|");
+                Console.WriteLine("| 4 - Cadastro de Matérias   |");
+                Console.WriteLine("| 5 - Sair                   |");
+                Console.WriteLine("----------------------------");
+                Console.Write("Digite a opção: ");
+
+            }
+
+            void imprimeSubMenu(string cadastro)
+            {
+                Console.Clear();
+                Console.WriteLine("------ Cadastro de "+cadastro+" -----");
+                Console.WriteLine("| 1 - Listar                   |");
+                Console.WriteLine("| 2 - Inserir                  |");
+                Console.WriteLine("| 3 - Alterar                  |");
+                Console.WriteLine("| 4 - Excluir                  |");
+                Console.WriteLine("| 5 - Voltar                   |");
+                Console.WriteLine("--------------------------------");
+                Console.Write("Digite a opção: ");
+            }
         }
     }
 }
