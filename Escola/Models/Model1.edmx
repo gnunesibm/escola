@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="escolaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="aluno">
+          <Key>
+            <PropertyRef Name="idAluno" />
+          </Key>
+          <Property Name="idAluno" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="matriculaAluno" Type="varchar" MaxLength="20" />
+          <Property Name="idPessoa" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'escola.dbo.aluno_materia' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="aluno_materia">
+          <Key>
+            <PropertyRef Name="idAluno" />
+            <PropertyRef Name="idMateria" />
+          </Key>
+          <Property Name="idAluno" Type="int" Nullable="false" />
+          <Property Name="idMateria" Type="int" Nullable="false" />
+          <Property Name="periodo" Type="varchar" MaxLength="10" />
+          <Property Name="nota" Type="float" />
+        </EntityType>
+        <EntityType Name="materia">
+          <Key>
+            <PropertyRef Name="idMateria" />
+          </Key>
+          <Property Name="idMateria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="50" />
+          <Property Name="idProfessor" Type="int" />
+        </EntityType>
+        <EntityType Name="pessoa">
+          <Key>
+            <PropertyRef Name="idPessoa" />
+          </Key>
+          <Property Name="idPessoa" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="50" />
+          <Property Name="cpf" Type="varchar" MaxLength="11" />
+          <Property Name="email" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="professor">
+          <Key>
+            <PropertyRef Name="idProfessor" />
+          </Key>
+          <Property Name="idProfessor" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="matriculaProfessor" Type="varchar" MaxLength="20" />
+          <Property Name="idPessoa" Type="int" />
+        </EntityType>
+        <Association Name="FK_aluno_materia_aluno">
+          <End Role="aluno" Type="Self.aluno" Multiplicity="1" />
+          <End Role="aluno_materia" Type="Self.aluno_materia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="aluno">
+              <PropertyRef Name="idAluno" />
+            </Principal>
+            <Dependent Role="aluno_materia">
+              <PropertyRef Name="idAluno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_aluno_materia_materia">
+          <End Role="materia" Type="Self.materia" Multiplicity="1" />
+          <End Role="aluno_materia" Type="Self.aluno_materia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="materia">
+              <PropertyRef Name="idMateria" />
+            </Principal>
+            <Dependent Role="aluno_materia">
+              <PropertyRef Name="idMateria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_aluno_pessoa">
+          <End Role="pessoa" Type="Self.pessoa" Multiplicity="0..1" />
+          <End Role="aluno" Type="Self.aluno" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pessoa">
+              <PropertyRef Name="idPessoa" />
+            </Principal>
+            <Dependent Role="aluno">
+              <PropertyRef Name="idPessoa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_materia_professor">
+          <End Role="professor" Type="Self.professor" Multiplicity="0..1" />
+          <End Role="materia" Type="Self.materia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="professor">
+              <PropertyRef Name="idProfessor" />
+            </Principal>
+            <Dependent Role="materia">
+              <PropertyRef Name="idProfessor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_professor_pessoa">
+          <End Role="pessoa" Type="Self.pessoa" Multiplicity="0..1" />
+          <End Role="professor" Type="Self.professor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pessoa">
+              <PropertyRef Name="idPessoa" />
+            </Principal>
+            <Dependent Role="professor">
+              <PropertyRef Name="idPessoa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="escolaModelStoreContainer">
+          <EntitySet Name="aluno" EntityType="Self.aluno" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="materia" EntityType="Self.materia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pessoa" EntityType="Self.pessoa" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="professor" EntityType="Self.professor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="aluno_materia" EntityType="Self.aluno_materia" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [aluno_materia].[idAluno] AS [idAluno], 
+    [aluno_materia].[idMateria] AS [idMateria], 
+    [aluno_materia].[periodo] AS [periodo], 
+    [aluno_materia].[nota] AS [nota]
+    FROM [dbo].[aluno_materia] AS [aluno_materia]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_aluno_materia_aluno" Association="Self.FK_aluno_materia_aluno">
+            <End Role="aluno" EntitySet="aluno" />
+            <End Role="aluno_materia" EntitySet="aluno_materia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_aluno_materia_materia" Association="Self.FK_aluno_materia_materia">
+            <End Role="materia" EntitySet="materia" />
+            <End Role="aluno_materia" EntitySet="aluno_materia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_aluno_pessoa" Association="Self.FK_aluno_pessoa">
+            <End Role="pessoa" EntitySet="pessoa" />
+            <End Role="aluno" EntitySet="aluno" />
+          </AssociationSet>
+          <AssociationSet Name="FK_materia_professor" Association="Self.FK_materia_professor">
+            <End Role="professor" EntitySet="professor" />
+            <End Role="materia" EntitySet="materia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_professor_pessoa" Association="Self.FK_professor_pessoa">
+            <End Role="pessoa" EntitySet="pessoa" />
+            <End Role="professor" EntitySet="professor" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="escolaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="aluno">
+          <Key>
+            <PropertyRef Name="idAluno" />
+          </Key>
+          <Property Name="idAluno" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="matriculaAluno" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="idPessoa" Type="Int32" />
+          <NavigationProperty Name="aluno_materia" Relationship="Self.FK_aluno_materia_aluno" FromRole="aluno" ToRole="aluno_materia" />
+          <NavigationProperty Name="pessoa" Relationship="Self.FK_aluno_pessoa" FromRole="aluno" ToRole="pessoa" />
+        </EntityType>
+        <EntityType Name="materia">
+          <Key>
+            <PropertyRef Name="idMateria" />
+          </Key>
+          <Property Name="idMateria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="idProfessor" Type="Int32" />
+          <NavigationProperty Name="aluno_materia" Relationship="Self.FK_aluno_materia_materia" FromRole="materia" ToRole="aluno_materia" />
+          <NavigationProperty Name="professor" Relationship="Self.FK_materia_professor" FromRole="materia" ToRole="professor" />
+        </EntityType>
+        <EntityType Name="pessoa">
+          <Key>
+            <PropertyRef Name="idPessoa" />
+          </Key>
+          <Property Name="idPessoa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cpf" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="alunoes" Relationship="Self.FK_aluno_pessoa" FromRole="pessoa" ToRole="aluno" />
+          <NavigationProperty Name="professors" Relationship="Self.FK_professor_pessoa" FromRole="pessoa" ToRole="professor" />
+        </EntityType>
+        <EntityType Name="professor">
+          <Key>
+            <PropertyRef Name="idProfessor" />
+          </Key>
+          <Property Name="idProfessor" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="matriculaProfessor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="idPessoa" Type="Int32" />
+          <NavigationProperty Name="materias" Relationship="Self.FK_materia_professor" FromRole="professor" ToRole="materia" />
+          <NavigationProperty Name="pessoa" Relationship="Self.FK_professor_pessoa" FromRole="professor" ToRole="pessoa" />
+        </EntityType>
+        <EntityType Name="aluno_materia">
+          <Key>
+            <PropertyRef Name="idAluno" />
+            <PropertyRef Name="idMateria" />
+          </Key>
+          <Property Name="idAluno" Type="Int32" Nullable="false" />
+          <Property Name="idMateria" Type="Int32" Nullable="false" />
+          <Property Name="periodo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="nota" Type="Double" />
+          <NavigationProperty Name="aluno" Relationship="Self.FK_aluno_materia_aluno" FromRole="aluno_materia" ToRole="aluno" />
+          <NavigationProperty Name="materia" Relationship="Self.FK_aluno_materia_materia" FromRole="aluno_materia" ToRole="materia" />
+        </EntityType>
+        <Association Name="FK_aluno_materia_aluno">
+          <End Role="aluno" Type="Self.aluno" Multiplicity="1" />
+          <End Role="aluno_materia" Type="Self.aluno_materia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="aluno">
+              <PropertyRef Name="idAluno" />
+            </Principal>
+            <Dependent Role="aluno_materia">
+              <PropertyRef Name="idAluno" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_aluno_pessoa">
+          <End Role="pessoa" Type="Self.pessoa" Multiplicity="0..1" />
+          <End Role="aluno" Type="Self.aluno" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pessoa">
+              <PropertyRef Name="idPessoa" />
+            </Principal>
+            <Dependent Role="aluno">
+              <PropertyRef Name="idPessoa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_aluno_materia_materia">
+          <End Role="materia" Type="Self.materia" Multiplicity="1" />
+          <End Role="aluno_materia" Type="Self.aluno_materia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="materia">
+              <PropertyRef Name="idMateria" />
+            </Principal>
+            <Dependent Role="aluno_materia">
+              <PropertyRef Name="idMateria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_materia_professor">
+          <End Role="professor" Type="Self.professor" Multiplicity="0..1" />
+          <End Role="materia" Type="Self.materia" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="professor">
+              <PropertyRef Name="idProfessor" />
+            </Principal>
+            <Dependent Role="materia">
+              <PropertyRef Name="idProfessor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_professor_pessoa">
+          <End Role="pessoa" Type="Self.pessoa" Multiplicity="0..1" />
+          <End Role="professor" Type="Self.professor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pessoa">
+              <PropertyRef Name="idPessoa" />
+            </Principal>
+            <Dependent Role="professor">
+              <PropertyRef Name="idPessoa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="escolaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="alunoes" EntityType="Self.aluno" />
+          <EntitySet Name="materias" EntityType="Self.materia" />
+          <EntitySet Name="pessoas" EntityType="Self.pessoa" />
+          <EntitySet Name="professors" EntityType="Self.professor" />
+          <EntitySet Name="aluno_materia" EntityType="Self.aluno_materia" />
+          <AssociationSet Name="FK_aluno_materia_aluno" Association="Self.FK_aluno_materia_aluno">
+            <End Role="aluno" EntitySet="alunoes" />
+            <End Role="aluno_materia" EntitySet="aluno_materia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_aluno_pessoa" Association="Self.FK_aluno_pessoa">
+            <End Role="pessoa" EntitySet="pessoas" />
+            <End Role="aluno" EntitySet="alunoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_aluno_materia_materia" Association="Self.FK_aluno_materia_materia">
+            <End Role="materia" EntitySet="materias" />
+            <End Role="aluno_materia" EntitySet="aluno_materia" />
+          </AssociationSet>
+          <AssociationSet Name="FK_materia_professor" Association="Self.FK_materia_professor">
+            <End Role="professor" EntitySet="professors" />
+            <End Role="materia" EntitySet="materias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_professor_pessoa" Association="Self.FK_professor_pessoa">
+            <End Role="pessoa" EntitySet="pessoas" />
+            <End Role="professor" EntitySet="professors" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="escolaModelStoreContainer" CdmEntityContainer="escolaEntities">
+          <EntitySetMapping Name="alunoes">
+            <EntityTypeMapping TypeName="escolaModel.aluno">
+              <MappingFragment StoreEntitySet="aluno">
+                <ScalarProperty Name="idAluno" ColumnName="idAluno" />
+                <ScalarProperty Name="matriculaAluno" ColumnName="matriculaAluno" />
+                <ScalarProperty Name="idPessoa" ColumnName="idPessoa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="materias">
+            <EntityTypeMapping TypeName="escolaModel.materia">
+              <MappingFragment StoreEntitySet="materia">
+                <ScalarProperty Name="idMateria" ColumnName="idMateria" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="idProfessor" ColumnName="idProfessor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pessoas">
+            <EntityTypeMapping TypeName="escolaModel.pessoa">
+              <MappingFragment StoreEntitySet="pessoa">
+                <ScalarProperty Name="idPessoa" ColumnName="idPessoa" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="cpf" ColumnName="cpf" />
+                <ScalarProperty Name="email" ColumnName="email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="professors">
+            <EntityTypeMapping TypeName="escolaModel.professor">
+              <MappingFragment StoreEntitySet="professor">
+                <ScalarProperty Name="idProfessor" ColumnName="idProfessor" />
+                <ScalarProperty Name="matriculaProfessor" ColumnName="matriculaProfessor" />
+                <ScalarProperty Name="idPessoa" ColumnName="idPessoa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="aluno_materia">
+            <EntityTypeMapping TypeName="escolaModel.aluno_materia">
+              <MappingFragment StoreEntitySet="aluno_materia">
+                <ScalarProperty Name="idAluno" ColumnName="idAluno" />
+                <ScalarProperty Name="idMateria" ColumnName="idMateria" />
+                <ScalarProperty Name="periodo" ColumnName="periodo" />
+                <ScalarProperty Name="nota" ColumnName="nota" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
