@@ -30,44 +30,10 @@ namespace Escola
                                         Console.ReadKey();
                                         break;
                                     case "2": //INSERIR
-                                        Console.Clear();
-                                        Console.Write("Digite o NOME: [0 - Cancela]: ");
-                                        string nome = Console.ReadLine();
-                                        if (nome == "0" || nome =="")
-                                            break;
-                                        else
-                                        {
-                                            Console.Write("Digite o CPF: ");
-                                            string cpf = Console.ReadLine();
-                                            Console.Write("Digite o E-mail: ");
-                                            string email = Console.ReadLine();
-                                            ps.inserePessoa(nome, cpf, email);
-                                        }
+                                        lerDadosPessoa();
                                         break;
                                     case "3": //ALTERAR
-                                        Console.Clear();
-                                        ps.listarPessoa();
-                                        Console.Write("Digite o codigo a ser alterado [0 - Cancela]: ");
-                                        string codAlteracao = Console.ReadLine();
-                                        if (codAlteracao == "" || codAlteracao == "0")
-                                            break;
-                                        else
-                                        {
-                                            pessoa p = db.pessoas.Find(int.Parse(codAlteracao));
-                                            Console.Clear();
-                                            Console.Write("Digite o novo nome para ["+p.nome+"][0 - Cancela]: ");
-                                            string novonome = Console.ReadLine();
-                                            if (novonome == "0")
-                                                break;
-                                            else
-                                            {
-                                                Console.Write("Digite o novo CPF ["+p.cpf+"]: ");
-                                                string cpf = Console.ReadLine();
-                                                Console.Write("Digite o novo E-mail [" + p.email + "]: ");
-                                                string email = Console.ReadLine();
-                                                ps.alteraPessoa(int.Parse(codAlteracao), novonome, cpf, email);
-                                            }
-                                        }
+                                        lerDadosAlteraPessia();
                                         break;
                                     case "4": //EXCLUIR
                                         ps.listarPessoa();
@@ -107,7 +73,6 @@ namespace Escola
                 Console.Write("Digite a opção: ");
 
             }
-
             void imprimeSubMenu(string cadastro)
             {
                 Console.Clear();
@@ -120,6 +85,49 @@ namespace Escola
                 Console.WriteLine("--------------------------------");
                 Console.Write("Digite a opção: ");
             }
+
+            void lerDadosPessoa()
+            {
+                Console.Clear();
+                Console.Write("Digite o nome: [0 - Cancela]: ");
+                string nome = Console.ReadLine();
+                if (nome != "0" || nome != "")
+                {
+                    Console.Write("Digite o CPF: ");
+                    string cpf = Console.ReadLine();
+                    Console.Write("Digite o E-mail: ");
+                    string email = Console.ReadLine();
+                    ps.inserePessoa(nome, cpf, email);
+                }
+            }
+
+
+            void lerDadosAlteraPessia()
+            {
+                using (escolaEntities db = new escolaEntities())
+                {
+                    Console.Clear();
+                    ps.listarPessoa();
+                    Console.Write("Digite o codigo a ser alterado [0 - Cancela]: ");
+                    string codAlteracao = Console.ReadLine();
+                    if (codAlteracao != "" || codAlteracao != "0")
+                    {
+                        pessoa p = db.pessoas.Find(int.Parse(codAlteracao));
+                        Console.Clear();
+                        Console.Write("Digite o novo nome para [" + p.nome + "][0 - Cancela]: ");
+                        string novonome = Console.ReadLine();
+                        if (novonome != "0")
+                        { 
+                            Console.Write("Digite o novo CPF [" + p.cpf + "]: ");
+                            string cpf = Console.ReadLine();
+                            Console.Write("Digite o novo E-mail [" + p.email + "]: ");
+                            string email = Console.ReadLine();
+                            ps.alteraPessoa(int.Parse(codAlteracao), novonome, cpf, email);
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

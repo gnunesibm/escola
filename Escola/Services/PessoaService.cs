@@ -1,5 +1,9 @@
 ﻿using Escola.Models;
+using Escola.ViewModel;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Escola.Services
 {
@@ -9,20 +13,38 @@ namespace Escola.Services
         {
             using (escolaEntities db = new escolaEntities())
             {
-                pessoa pes = new pessoa()
+                PessoaViewModel pes = new PessoaViewModel()
                 {
                     nome = nome,
                     cpf = cpf,
                     email = email,
                 };
-                if (nome != "")
+                // executa a validacao de acordo com os data anotations da view model
+                IEnumerable<ValidationResult> errorValidations = PessoaViewModel.GetValidationErrors(pes);
+  
+                // insere pessoa se nao tiver erros 
+                if (errorValidations.Count() == 0)
                 {
-                    db.pessoas.Add(pes);
+                    db.pessoas.Add(PessoaViewModel.ToEntity(pes));
                     db.SaveChanges();
+                }
+                else
+                {
+                    foreach (ValidationResult vr in errorValidations)
+                    {
+                        // mostra o erro
+                        Console.WriteLine(vr.ErrorMessage);
+                        foreach (var name in vr.MemberNames)
+                        {
+                            // mostra em qual campo ocorreu o erro
+                            Console.WriteLine(name);
+                            
+                        }
+                    }
+                    Console.ReadKey();
                 }
             }
         }
-
 
         public void alteraPessoa(int cod, string nome, string cpf, string email)
         {
